@@ -1,0 +1,864 @@
+<html><head><base href="." />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    background: #1a1a1a;
+    color: #e0e0e0;
+    display: flex;
+  }
+
+  .sidebar {
+    width: 250px;
+    background: linear-gradient(180deg, #2d2d2d 0%, #252525 100%);
+    height: 100vh;
+    position: fixed;
+    padding: 20px;
+    border-right: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 2px 0 20px rgba(0,0,0,0.4);
+  }
+
+  .sidebar h2 {
+    font-weight: 300;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #e0e0e0;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 20px;
+  }
+
+  .sidebar-nav {
+    list-style: none;
+    margin-top: 20px;
+  }
+
+  .sidebar-nav li {
+    margin-bottom: 15px;
+  }
+
+  .sidebar-nav a {
+    color: #e0e0e0;
+    text-decoration: none;
+    font-size: 1.2em;
+    display: block;
+    padding: 12px 15px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sidebar-nav a:hover {
+    background: rgba(255,255,255,0.05);
+    transform: translateX(5px);
+  }
+
+  .sidebar-nav i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+  }
+
+  .main-content {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+  }
+
+  .section {
+    padding: 20px;
+    margin-bottom: 40px;
+  }
+
+  .section-title {
+    font-size: 2em;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #3d3d3d;
+    color: #e0e0e0;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: linear-gradient(145deg, #2d2d2d 0%, #252525 100%);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 25px rgba(0,0,0,0.4);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                box-shadow 0.4s ease,
+                border-color 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  }
+
+  .card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+    border-color: rgba(255,255,255,0.15);
+  }
+
+  .card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    filter: brightness(0.9);
+    transition: filter 0.4s ease, transform 0.4s ease;
+  }
+
+  .card:hover img {
+    filter: brightness(1.2) contrast(1.1);
+    transform: scale(1.05);
+  }
+
+  .header {
+    background: linear-gradient(135deg, #1a1a1a, #2d2d2d, #1a1a1a);
+    padding: 80px 20px;
+    margin-bottom: 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .header h1 {
+    font-size: 3.5em;
+    font-weight: 300;
+    letter-spacing: 3px;
+    margin-bottom: 15px;
+    background: linear-gradient(90deg, #ffd700, #ff6b6b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  .header p {
+    font-size: 1.4em;
+    opacity: 0.9;
+    color: #b0b0b0;
+    max-width: 800px;
+    margin: 0 auto;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  }
+
+  @keyframes glow {
+    from {
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5),
+                   0 0 20px rgba(255, 215, 0, 0.3),
+                   0 0 30px rgba(255, 215, 0, 0.2);
+    }
+    to {
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.6),
+                   0 0 30px rgba(255, 215, 0, 0.4),
+                   0 0 40px rgba(255, 215, 0, 0.3);
+    }
+  }
+
+  .rating {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(0,0,0,0.2);
+    padding: 8px 15px;
+    border-radius: 20px;
+    margin: 15px 0;
+    border: 1px solid rgba(255,215,0,0.2);
+  }
+
+  .rating::before {
+    content: 'Rating:';
+    font-size: 0.9em;
+    color: #999;
+    margin-right: 8px;
+  }
+
+  .review-quote {
+    font-style: italic;
+    color: #b0b0b0;
+    font-size: 0.95em;
+    padding: 15px;
+    background: rgba(0,0,0,0.25);
+    border-radius: 12px;
+    margin: 15px 0;
+    border-left: 4px solid #ffd700;
+    position: relative;
+  }
+
+  .review-quote::before {
+    content: '"';
+    font-size: 2em;
+    color: rgba(255,215,0,0.2);
+    position: absolute;
+    top: 5px;
+    left: 10px;
+  }
+
+  .review-source {
+    font-size: 0.85em;
+    color: #888;
+    text-align: right;
+    margin-top: 8px;
+    font-style: normal;
+  }
+
+  @media (max-width: 600px) {
+    .grid-container {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .banner {
+    height: 500px;
+    background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .banner-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px;
+  }
+
+  .banner-slider {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 20px;
+  }
+
+  .news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
+    padding: 20px;
+  }
+
+  .forum-categories {
+    background: #2d2d2d;
+    border-radius: 15px;
+    padding: 20px;
+  }
+
+  .media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    padding: 20px;
+  }
+
+  .calendar-wrapper {
+    background: #2d2d2d;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px;
+  }
+</style>
+</head>
+<body>
+  <nav class="sidebar">
+    <h2>Menú</h2>
+    <ul class="sidebar-nav">
+      <li><a href="#inicio"><i class="fas fa-home"></i> Inicio</a></li>
+      <li><a href="#videojuegos"><i class="fas fa-gamepad"></i> Videojuegos</a></li>
+      <li><a href="#series"><i class="fas fa-tv"></i> Series</a></li>
+      <li><a href="#peliculas"><i class="fas fa-film"></i> Películas</a></li>
+      <li><a href="#noticias"><i class="fas fa-newspaper"></i> Noticias</a></li>
+      <li><a href="#foro"><i class="fas fa-comments"></i> Foro</a></li>
+      <li><a href="#galeria"><i class="fas fa-images"></i> Galería</a></li>
+      <li><a href="#eventos"><i class="fas fa-calendar"></i> Eventos</a></li>
+    </ul>
+  </nav>
+
+  <div class="main-content">
+    <section id="inicio" class="section">
+      <div class="banner">
+        <div class="banner-content">
+          <h1>Últimos Lanzamientos</h1>
+          <div class="banner-slider">
+            <!-- Banner content here -->
+          </div>
+        </div>
+      </div>
+      
+      <div class="news-grid">
+        <h2>Noticias de la Industria</h2>
+        <!-- News items grid -->
+      </div>
+    </section>
+
+    <header class="header">
+      <h1>Nexus Entertainment Hub</h1>
+      <p>Tu portal definitivo para explorar el universo del entretenimiento digital: Videojuegos, Series y Películas en un solo lugar</p>
+    </header>
+
+    <section id="videojuegos" class="section">
+      <h2 class="section-title">Videojuegos</h2>
+      <div class="grid-container">
+        <div class="card">
+          <img src="https://image.api.playstation.com/vulcan/ap/rnd/202207/1210/4xJ8XB3bi888QTLZYdl7Oi0s.png" 
+               alt="God of War Ragnarök - Kratos y Atreus enfrentando a Thor en una épica batalla"
+               width="300" height="200">
+          <h2>God of War Ragnarök</h2>
+          <div class="rating">★★★★★ 9.7/10</div>
+          <p>Una obra maestra que continúa la saga nórdica de Kratos y Atreus. La narrativa, los combates y los gráficos son simplemente excepcionales.</p>
+          <div class="review-quote">
+            "Una secuela épica que supera a su predecesor en todos los aspectos. Una obra maestra que define la generación."
+            <div class="review-source">- IGN</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://assets.playstation.com/is/image/SCEA/the-last-of-us-part-ii-screen-01-ps4-us-11jun20" 
+               alt="The Last of Us Part II - Ellie tocando la guitarra en un momento emotivo"
+               width="300" height="200">
+          <h2>The Last of Us Part II</h2>
+          <div class="rating">★★★★★ 9.5/10</div>
+          <p>Una narrativa desgarradora sobre el ciclo de la venganza y sus consecuencias.</p>
+          <div class="review-quote">
+            "Una experiencia emocionalmente devastadora y visualmente impresionante."
+            <div class="review-source">- GameSpot</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://image.api.playstation.com/vulcan/ap/rnd/202107/3100/HO8vkO9pfXhwbHi5WHECQJdN.png" 
+               alt="Horizon Forbidden West - Aloy enfrentándose a una máquina gigante en un paisaje espectacular"
+               width="300" height="200">
+          <h2>Horizon Forbidden West</h2>
+          <div class="rating">★★★★☆ 9.0/10</div>
+          <p>La continuación de las aventuras de Aloy expande todo lo que hizo grande al original.</p>
+          <div class="review-quote">
+            "Un mundo abierto impresionante con una narrativa absorbente."
+            <div class="review-source">- IGN</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://assets.reedpopcdn.com/resident-evil-4-remake-review-a-masterful-reimagining-of-a-horror-classic-1679425286690.jpg/BROK/thumbnail/1600x900/format/jpg/quality/80/resident-evil-4-remake-review-a-masterful-reimagining-of-a-horror-classic-1679425286690.jpg" 
+               alt="Resident Evil 4 Remake - Leon enfrentándose a los infectados en el pueblo"
+               width="300" height="200">
+          <h2>Resident Evil 4 Remake</h2>
+          <div class="rating">★★★★☆ 9.2/10</div>
+          <p>Una reinvención magistral de un clásico que moderniza la jugabilidad y los gráficos.</p>
+          <div class="review-quote">
+            "El remake que todos esperaban, un regreso triunfal al horror clásico."
+            <div class="review-source">- Game Informer</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://image.api.playstation.com/vulcan/ap/rnd/202208/0921/dR9KJAKDW2izPbptHQbh3rnj.png" 
+               alt="Elden Ring - Un Tarnished enfrentándose a un jefe épico en un mundo de fantasía oscura"
+               width="300" height="200">
+          <h2>Elden Ring</h2>
+          <div class="rating">★★★★★ 9.8/10</div>
+          <p>Una obra maestra de FromSoftware que redefine los juegos de mundo abierto con su diseño de niveles y desafiante jugabilidad.</p>
+          <div class="review-quote">
+            "El mejor juego de rol de la década, una experiencia inolvidable."
+            <div class="review-source">- Polygon</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://cdn.akamai.steamstatic.com/steam/apps/1817070/ss_df93b5e8a183b7f983ab28a5fe4528df2b48dec1.jpg" 
+               alt="Marvel's Spider-Man 2 - Peter Parker y Miles Morales columpiándose juntos por Nueva York"
+               width="300" height="200">
+          <h2>Marvel's Spider-Man 2</h2>
+          <div class="rating">★★★★☆ 9.4/10</div>
+          <p>La secuela que une a Peter Parker y Miles Morales en una aventura épica por Nueva York.</p>
+          <div class="review-quote">
+            "Un juego que no solo expande el universo, sino que lo redefine."
+            <div class="review-source">- Eurogamer</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://hobbyconsolas.com/sites/navi.axelspringer.es/public/media/image/2023/02/hogwarts-legacy-2962157.jpg" 
+               alt="Hogwarts Legacy - Un mago explorando el castillo de Hogwarts en un ambiente mágico"
+               width="300" height="200">
+          <h2>Hogwarts Legacy</h2>
+          <div class="rating">★★★★☆ 8.8/10</div>
+          <p>La aventura definitiva en el mundo mágico que permite vivir tu propia historia como estudiante en Hogwarts.</p>
+          <div class="review-quote">
+            "Un sueño hecho realidad para los fans de Harry Potter."
+            <div class="review-source">- IGN</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://assets.reedpopcdn.com/cyberpunk-2077-phantom-liberty-review-a-stellar-expansion-that-shows-cd-projekt-red-at-its-very-best-1695650429377.jpg" 
+               alt="Cyberpunk 2077: Phantom Liberty - V en Night City con efectos neón"
+               width="300" height="200">
+          <h2>Cyberpunk 2077: Phantom Liberty</h2>
+          <div class="rating">★★★★☆ 9.1/10</div>
+          <p>La expansión que redime al juego base con una historia cautivadora y mejoras significativas.</p>
+          <div class="review-quote">
+            "Una experiencia que transforma completamente el juego original."
+            <div class="review-source">- GameSpot</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/ncom/software/switch/70010000063709/276a412988e07c4d55a2996c6d38abb408b464413b2dfeb44d2aa460b9f622e1" 
+               alt="The Legend of Zelda: Tears of the Kingdom - Link explorando las islas flotantes"
+               width="300" height="200">
+          <h2>The Legend of Zelda: Tears of the Kingdom</h2>
+          <div class="rating">★★★★★ 9.5/10</div>
+          <p>La secuela de Breath of the Wild que eleva la fórmula a nuevas alturas con mecánicas innovadoras.</p>
+          <div class="review-quote">
+            "Un viaje épico que redefine lo que significa ser un juego de aventuras."
+            <div class="review-source">- IGN</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://assets.xboxservices.com/assets/1c/13/1c13b4b8-e06e-4c09-850c-779038511a8a.jpg" 
+               alt="Starfield - Exploración espacial con una nave en primer plano"
+               width="300" height="200">
+          <h2>Starfield</h2>
+          <div class="rating">★★★★☆ 8.9/10</div>
+          <p>La nueva IP de Bethesda que nos lleva a explorar la última frontera con una libertad sin precedentes.</p>
+          <div class="review-quote">
+            "Un universo expansivo que ofrece una libertad sin igual en la exploración."
+            <div class="review-source">- Game Informer</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1817190/ss_df93b5e8a183b7f983ab28a5fe4528df2b48dec1.jpg" 
+               alt="Star Wars Jedi: Survivor - Cal Kestis en combate con sable de luz"
+               width="300" height="200">
+          <h2>Star Wars Jedi: Survivor</h2>
+          <div class="rating">★★★★☆ 9.0/10</div>
+          <p>La continuación de las aventuras de Cal Kestis que expande el combate y la exploración.</p>
+          <div class="review-quote">
+            "Un juego que logra mejorar la fórmula establecida por su predecesor."
+            <div class="review-source">- IGN</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="series" class="section">
+      <h2 class="section-title">Series</h2>
+      <div class="grid-container">
+        <div class="card">
+          <img src="https://cdn.hobbyconsolas.com/sites/navi.axelspringer.es/public/media/image/2023/01/last-of-us-hbo-2932009.jpg" 
+               alt="The Last of Us Serie - Pedro Pascal como Joel y Bella Ramsey como Ellie en una escena icónica"
+               width="300" height="200">
+          <h2>The Last of Us (Serie)</h2>
+          <div class="rating">★★★★★ 9.6/10</div>
+          <p>Una adaptación extraordinaria que demuestra cómo se debe adaptar un videojuego.</p>
+          <div class="review-quote">
+            "Una obra maestra de la televisión que captura la esencia del juego."
+            <div class="review-source">- The Verge</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://www.gamespot.com/a/uploads/screen_kubrick/1179/11799911/4075069-screenshot2022-10-24at10.54.27am.png" 
+               alt="House of the Dragon - Rhaenyra Targaryen montando a Syrax"
+               width="300" height="200">
+          <h2>House of the Dragon</h2>
+          <div class="rating">★★★★☆ 8.8/10</div>
+          <p>El spin-off de Game of Thrones que narra la guerra civil Targaryen.</p>
+          <div class="review-quote">
+            "Una serie que logra revivir la magia de Game of Thrones."
+            <div class="review-source">- IGN</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/wednesday-netflix-1669295268.jpg" 
+               alt="Wednesday - Jenna Ortega bailando en la icónica escena del baile"
+               width="300" height="200">
+          <h2>Wednesday</h2>
+          <div class="rating">★★★★☆ 9.0/10</div>
+          <p>Jenna Ortega brilla como Wednesday Addams en esta reinvención de la familia Addams.</p>
+          <div class="review-quote">
+            "Una serie que mezcla humor y misterio a la perfección."
+            <div class="review-source">- Collider</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://culturageek.com.ar/wp-content/uploads/2023/06/the-witcher-temporada-3-netflix.jpg" 
+               alt="The Witcher - Geralt de Rivia en una escena de batalla"
+               width="300" height="200">
+          <h2>The Witcher</h2>
+          <div class="rating">★★★★☆ 8.5/10</div>
+          <p>La adaptación de la saga literaria que sigue las aventuras de Geralt de Rivia.</p>
+          <div class="review-quote">
+            "Una serie que se adentra en un mundo lleno de magia y aventuras."
+            <div class="review-source">- Den of Geek</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://cdn.hobbyconsolas.com/sites/navi.axelspringer.es/public/media/image/2023/03/mandalorian-temporada-3-2984371.jpg" 
+               alt="The Mandalorian - Din Djarin y Grogu en una escena conmovedora"
+               width="300" height="200">
+          <h2>The Mandalorian</h2>
+          <div class="rating">★★★★★ 9.4/10</div>
+          <p>La serie que expandió el universo de Star Wars con una historia única sobre un cazarrecompensas mandaloriano.</p>
+          <div class="review-quote">
+            "Un viaje emocionante a través de la galaxia que encanta a los fans."
+            <div class="review-source">- Variety</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://cdn.hobbyconsolas.com/sites/navi.axelspringer.es/public/media/image/2023/03/succession-temporada-4-2980361.jpg" 
+               alt="Succession - La familia Roy en una tensa reunión familiar"
+               width="300" height="200">
+          <h2>Succession</h2>
+          <div class="rating">★★★★★ 9.8/10</div>
+          <p>El drama familiar definitivo sobre poder, dinero y traición en el mundo de los medios de comunicación.</p>
+          <div class="review-quote">
+            "Una serie impecable en actuación y escritura."
+            <div class="review-source">- The Guardian</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://www.nme.com/wp-content/uploads/2023/01/the-bear-season-two.jpg" 
+               alt="The Bear - El equipo de cocina en plena acción"
+               width="300" height="200">
+          <h2>The Bear</h2>
+          <div class="rating">★★★★☆ 8.7/10</div>
+          <p>Una intensa mirada al mundo de la alta cocina y las relaciones familiares.</p>
+          <div class="review-quote">
+            "Una serie que captura la esencia de la lucha y la superación."
+            <div class="review-source">- Entertainment Weekly</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://cdn.hobbyconsolas.com/sites/navi.axelspringer.es/public/media/image/2023/08/ahsoka-star-wars-3039995.jpg" 
+               alt="Ahsoka - Rosario Dawson como Ahsoka Tano"
+               width="300" height="200">
+          <h2>Ahsoka</h2>
+          <div class="rating">★★★★☆ 8.9/10</div>
+          <p>La serie que continúa la historia de la querida Jedi de Clone Wars en acción real.</p>
+          <div class="review-quote">
+            "Un regreso emocionante a un personaje querido por los fans."
+            <div class="review-source">- Screen Rant</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://variety.com/wp-content/uploads/2023/10/gen-v.jpg" 
+               alt="Gen V - Los protagonistas en una escena de acción"
+               width="300" height="200">
+          <h2>Gen V</h2>
+          <div class="rating">★★★★☆ 8.6/10</div>
+          <p>El spin-off de The Boys que explora una universidad para superhéroes.</p>
+          <div class="review-quote">
+            "Una mirada fresca y salvaje al mundo de los superhéroes."
+            <div class="review-source">- Collider</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://www.nme.com/wp-content/uploads/2023/05/Ted-Lasso-season-3-2000x1270-1.jpg" 
+               alt="Ted Lasso - El equipo celebrando una victoria"
+               width="300" height="200">
+          <h2>Ted Lasso</h2>
+          <div class="rating">★★★★★ 9.5/10</div>
+          <p>La serie que mezcla perfectamente humor y corazón en el mundo del fútbol.</p>
+          <div class="review-quote">
+            "Una joya que calienta el corazón y hace reír."
+            <div class="review-source">- The Ringer</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="peliculas" class="section">
+      <h2 class="section-title">Películas</h2>
+      <div class="grid-container">
+        <div class="card">
+          <img src="https://imageio.forbes.com/specials-images/imageserve/6475ff36899eabf8fe2fc7e4/0x0.jpg" 
+               alt="Spider-Man: Across the Spider-Verse - Miles Morales enfrentándose a Spider-Man 2099"
+               width="300" height="200">
+          <h2>Spider-Man: Across the Spider-Verse</h2>
+          <div class="rating">★★★★★ 9.7/10</div>
+          <p>Una secuela que supera a su predecesora con una animación revolucionaria.</p>
+          <div class="review-quote">
+            "Una obra maestra de la animación que redefine el género."
+            <div class="review-source">- Collider</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://cdn.marvel.com/content/1x/guardians_of_the_galaxy_vol_3_6.jpg" 
+               alt="Guardianes de la Galaxia Vol. 3 - Los Guardianes en su última aventura juntos"
+               width="300" height="200">
+          <h2>Guardianes de la Galaxia Vol. 3</h2>
+          <div class="rating">★★★★★ 9.3/10</div>
+          <p>El cierre perfecto para la trilogía de James Gunn.</p>
+          <div class="review-quote">
+            "Una conclusión emotiva que deja una huella duradera."
+            <div class="review-source">- IGN</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://www.mundodeportivo.com/files/image_948_465/uploads/2023/04/05/642d8b1f745ee.jpeg" 
+               alt="Super Mario Bros: La Película - Mario y sus amigos en una escena llena de referencias al videojuego"
+               width="300" height="200">
+          <h2>Super Mario Bros: La Película</h2>
+          <div class="rating">★★★★☆ 8.8/10</div>
+          <p>Una celebración del universo Mario que captura perfectamente la magia de los videojuegos.</p>
+          <div class="review-quote">
+            "Un viaje nostálgico que encanta tanto a niños como a adultos."
+            <div class="review-source">- Variety</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://www.mundodeportivo.com/files/image_948_465/uploads/2023/07/21/64ba6d1f673dd.jpeg" 
+               alt="Oppenheimer - Cillian Murphy como J. Robert Oppenheimer"
+               width="300" height="200">
+          <h2>Oppenheimer</h2>
+          <div class="rating">★★★★★ 9.5/10</div>
+          <p>La magistral obra de Christopher Nolan sobre el padre de la bomba atómica.</p>
+          <div class="review-quote">
+            "Una narración épica que hace reflexionar sobre las decisiones humanas."
+            <div class="review-source">- The Guardian</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://cdn.hobbyconsolas.com/sites/navi.axelspringer.es/public/media/image/2023/07/barbie-pelicula-2023-3053252.jpg" 
+               alt="Barbie - Margot Robbie como Barbie en Barbieland"
+               width="300" height="200">
+          <h2>Barbie</h2>
+          <div class="rating">★★★★☆ 8.7/10</div>
+          <p>Una colorida y reflexiva aventura que desafía las expectativas y los estereotipos de género.</p>
+          <div class="review-quote">
+            "Un film que combina humor y crítica social de manera brillante."
+            <div class="review-source">- Collider</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://www.hollywoodreporter.com/wp-content/uploads/2023/10/MCDBLMA_WD019.jpg" 
+               alt="Killers of the Flower Moon - Robert De Niro y Leonardo DiCaprio en una escena tensa"
+               width="300" height="200">
+          <h2>Killers of the Flower Moon</h2>
+          <div class="rating">★★★★★ 9.4/10</div>
+          <p>La nueva obra maestra de Martin Scorsese sobre uno de los capítulos más oscuros de la historia americana.</p>
+          <div class="review-quote">
+            "Un relato cautivador que revela verdades incómodas."
+            <div class="review-source">- The Verge</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://www.hollywoodreporter.com/wp-content/uploads/2023/06/napoleon-Still-1-H-2023.jpg" 
+               alt="Napoleon - Joaquin Phoenix como Napoleón Bonaparte"
+               width="300" height="200">
+          <h2>Napoleon</h2>
+          <div class="rating">★★★★☆ 8.9/10</div>
+          <p>La épica histórica de Ridley Scott que retrata el ascenso y caída del emperador francés.</p>
+          <div class="review-quote">
+            "Una representación impresionante de la ambición y el poder."
+            <div class="review-source">- Deadline</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://variety.com/wp-content/uploads/2023/04/MCDJOHN_EC105.jpg" 
+               alt="John Wick: Chapter 4 - Keanu Reeves en una escena de acción"
+               width="300" height="200">
+          <h2>John Wick: Chapter 4</h2>
+          <div class="rating">★★★★★ 9.2/10</div>
+          <p>La culminación épica de la saga de acción que elevó el género a nuevas alturas.</p>
+          <div class="review-quote">
+            "Una película que redefine las escenas de acción en el cine moderno."
+            <div class="review-source">- IGN</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://sm.ign.com/t/ign_es/screenshot/default/image002-1_72be.1280.jpg" 
+               alt="The Creator - Robots y humanos en un futuro distópico"
+               width="300" height="200">
+          <h2>The Creator</h2>
+          <div class="rating">★★★★☆ 8.5/10</div>
+          <p>Una visión única de la guerra entre humanos e IA con efectos visuales impresionantes.</p>
+          <div class="review-quote">
+            "Un film que desafía la percepción de la inteligencia artificial."
+            <div class="review-source">- The Hollywood Reporter</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://www.gamereactor.es/media/98/bluebeetle_3912073.jpg" 
+               alt="Blue Beetle - Jaime Reyes con el traje de Blue Beetle"
+               width="300" height="200">
+          <h2>Blue Beetle</h2>
+          <div class="rating">★★★★☆ 8.4/10</div>
+          <p>Una refrescante historia de origen que aporta diversidad al género de superhéroes.</p>
+          <div class="review-quote">
+            "Una narrativa encantadora que celebra la cultura latina."
+            <div class="review-source">- Screen Rant</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="noticias" class="section">
+      <h2 class="section-title">Blog de Noticias</h2>
+      <div class="blog-grid">
+        <!-- Blog posts -->
+      </div>
+    </section>
+
+    <section id="foro" class="section">
+      <h2 class="section-title">Foro de Discusión</h2>
+      <div class="forum-categories">
+        <!-- Forum categories and topics -->
+      </div>
+    </section>
+
+    <section id="galeria" class="section">
+      <h2 class="section-title">Galería Multimedia</h2>
+      <div class="media-grid">
+        <!-- Media items -->
+      </div>
+    </section>
+
+    <section id="eventos" class="section">
+      <h2 class="section-title">Calendario de Eventos</h2>
+      <div class="calendar-wrapper">
+        <!-- Calendar implementation -->
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        const headerOffset = 20;
+        const elementPosition = target.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // Add intersection observer for fade-in effects
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = 1;
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+
+    document.querySelectorAll('.card').forEach(card => {
+      card.style.opacity = 0;
+      card.style.transform = 'translateY(20px)';
+      card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      observer.observe(card);
+    });
+
+    // Banner slider functionality
+    const bannerSlider = document.querySelector('.banner-slider');
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    bannerSlider.addEventListener('mousedown', (e) => {
+      isDown = true;
+      startX = e.pageX - bannerSlider.offsetLeft;
+      scrollLeft = bannerSlider.scrollLeft;
+    });
+
+    bannerSlider.addEventListener('mouseleave', () => {
+      isDown = false;
+    });
+
+    bannerSlider.addEventListener('mouseup', () => {
+      isDown = false;
+    });
+
+    bannerSlider.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - bannerSlider.offsetLeft;
+      const walk = (x - startX) * 3;
+      bannerSlider.scrollLeft = scrollLeft - walk;
+    });
+
+    // Calendar functionality
+    class Calendar {
+      constructor(container) {
+        this.container = container;
+        this.date = new Date();
+        this.render();
+      }
+
+      render() {
+        // Calendar rendering logic
+      }
+    }
+
+    // Initialize calendar if element exists
+    const calendarContainer = document.querySelector('.calendar-wrapper');
+    if (calendarContainer) {
+      new Calendar(calendarContainer);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<html><head><base href="." target="_blank">
+<style>
+  body { 
+    margin: 0;
+    overflow: hidden;
+    background: #111;
+    font-family: Arial, sans-serif;
+  }
+  
+  #game {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+  }
+  
+  #player {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: transform 0.2s;
+  }
+  
+  .bullet {
+    width: 10px;
+    height: 10px;
+    background: #ff0;
+    position: absolute;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .target {
+    width: 30px;
+    height: 30px;
+    background: #f00;
+    position: absolute;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  #score {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    color: white;
+    font-size: 24px;
+  }
+  
+  #level {
+    position: fixed;
+    top: 60px;
+    left: 20px;
+    color: white;
+    font-size: 24px;
+  }
+
+  #weapon {
+    position: fixed;
+    top: 100px;
+    left: 20px;
+    color: white;
+    font-size: 24px;
+  }
+</style>
+</head>
+<body>
+<div id="game">
+  <svg id="player" viewBox="0 0 100 100">
+    <polygon points="50,0 100,100 50,80 0,100" fill="#0f0"/>
+  </svg>
+  <div id="score">Score: 0</div>
+  <div id="level">Level: 1</div>
+  <div id="weapon">Weapon: Basic</div>
+</div>
+
+<script>
+const game = document.getElementById('game');
+const player = document.getElementById('player');
+const scoreElement = document.getElementById('score');
+const levelElement = document.getElementById('level');
+const weaponElement = document.getElementById('weapon');
+
+let score = 0;
+let level = 1;
+let weaponLevel = 1;
+let bullets = [];
+let targets = [];
+let lastShot = 0;
+
+const weapons = {
+  1: { name: 'Basic', cooldown: 500, speed: 5, damage: 1 },
+  2: { name: 'Double', cooldown: 400, speed: 6, damage: 2 },
+  3: { name: 'Triple', cooldown: 300, speed: 7, damage: 3 },
+  4: { name: 'Quad', cooldown: 200, speed: 8, damage: 4 },
+  5: { name: 'Ultra', cooldown: 100, speed: 10, damage: 5 }
+};
+
+// Mouse movement
+game.addEventListener('mousemove', (e) => {
+  const x = e.clientX;
+  player.style.left = `${x}px`;
+});
+
+// Shooting
+game.addEventListener('click', (e) => {
+  const now = Date.now();
+  if (now - lastShot >= weapons[weaponLevel].cooldown) {
+    shoot(e.clientX, e.clientY);
+    lastShot = now;
+  }
+});
+
+function shoot(targetX, targetY) {
+  const playerRect = player.getBoundingClientRect();
+  const playerX = playerRect.left + playerRect.width / 2;
+  const playerY = playerRect.top + playerRect.height / 2;
+  
+  const bullet = document.createElement('div');
+  bullet.className = 'bullet';
+  game.appendChild(bullet);
+  
+  const angle = Math.atan2(targetY - playerY, targetX - playerX);
+  const velocity = {
+    x: Math.cos(angle) * weapons[weaponLevel].speed,
+    y: Math.sin(angle) * weapons[weaponLevel].speed
+  };
+  
+  bullets.push({ element: bullet, x: playerX, y: playerY, velocity });
+}
+
+function spawnTarget() {
+  const target = document.createElement('div');
+  target.className = 'target';
+  game.appendChild(target);
+  
+  const x = Math.random() * (window.innerWidth - 30);
+  const y = Math.random() * (window.innerHeight / 2);
+  
+  targets.push({ 
+    element: target, 
+    x, 
+    y,
+    health: level
+  });
+}
+
+function updateGame() {
+  // Update bullets
+  bullets.forEach((bullet, bulletIndex) => {
+    bullet.x += bullet.velocity.x;
+    bullet.y += bullet.velocity.y;
+    
+    bullet.element.style.left = `${bullet.x}px`;
+    bullet.element.style.top = `${bullet.y}px`;
+    
+    if (bullet.x < 0 || bullet.x > window.innerWidth || 
+        bullet.y < 0 || bullet.y > window.innerHeight) {
+      bullet.element.remove();
+      bullets.splice(bulletIndex, 1);
+    }
+  });
+  
+  // Check collisions
+  targets.forEach((target, targetIndex) => {
+    target.element.style.left = `${target.x}px`;
+    target.element.style.top = `${target.y}px`;
+    
+    bullets.forEach((bullet, bulletIndex) => {
+      const dx = target.x - bullet.x;
+      const dy = target.y - bullet.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      if (distance < 20) {
+        target.health -= weapons[weaponLevel].damage;
+        bullet.element.remove();
+        bullets.splice(bulletIndex, 1);
+        
+        if (target.health <= 0) {
+          target.element.remove();
+          targets.splice(targetIndex, 1);
+          score++;
+          scoreElement.textContent = `Score: ${score}`;
+          
+          if (score >= level * 5) {
+            level++;
+            levelElement.textContent = `Level: ${level}`;
+            weaponLevel = Math.min(5, Math.floor(level / 2) + 1);
+            weaponElement.textContent = `Weapon: ${weapons[weaponLevel].name}`;
+          }
+        }
+      }
+    });
+  });
+  
+  // Spawn new targets
+  if (targets.length < level + 2) {
+    spawnTarget();
+  }
+  
+  requestAnimationFrame(updateGame);
+}
+
+updateGame();
+</script>
+</body></html>
